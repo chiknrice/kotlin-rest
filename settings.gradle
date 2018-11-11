@@ -1,0 +1,4 @@
+rootProject.name = 'kotlin-rest'
+include 'kotlin-rest-api'
+include 'kotlin-rest-app'
+

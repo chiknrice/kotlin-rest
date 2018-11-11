@@ -1,0 +1,25 @@
+[[resources-authors]]
+== Authors
+
+The authors resource returns authors of posts in a bulletin board
+
+[[get-authors]]
+=== List of Authors
+
+ A `GET` request with no parameters will return a list of authors
+
+operation::get-authors[snippets='curl-request,http-request,http-response']
+
+[[get-author]]
+=== Get by ID
+
+A `GET` request with a path parameter of the id will return the greeting with that id.
+
+operation::get-author[snippets='curl-request,http-request,http-response,path-parameters,response-fields']
+
+[[create-author]]
+=== Create a new author
+
+A `POST` request will create a new author.
+
+operation::create-author[snippets='request-body,curl-request,http-request,http-response']
