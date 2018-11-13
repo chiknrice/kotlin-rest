@@ -27,4 +27,9 @@ class AuthorsController : AuthorsAPI {
         return created(URI.create(location)).build()
     }
 
+    override fun createAuthors(authors: List<Author>): ResponseEntity<Void> {
+        authorsService.createAll(authors)
+        return ResponseEntity.ok().build()
+    }
+
 }

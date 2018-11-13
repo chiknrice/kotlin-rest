@@ -3,6 +3,7 @@ package org.chiknrice.rest
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.bind.annotation.ResponseStatus
 
 interface AuthorsService {
@@ -12,6 +13,9 @@ interface AuthorsService {
     fun getAuthor(id: Int): Author
 
     fun create(author: Author): Int
+
+    @Transactional
+    fun createAll(authors: List<Author>): List<Int>
 
 }
 
@@ -32,6 +36,17 @@ class AuthorsServiceProd : AuthorsService {
             .orElseThrow { NotFoundException("Author with id: $id not found") }
 
     override fun create(author: Author) = authorsRepository.save(AuthorEntity(-1, author.name, author.role)).id
+
+    override fun createAll(authors: List<Author>): List<Int> {
+        return authors.map { author ->
+            if(author.role == Role.USER) {
+                throw RuntimeException()
+            } else {
+                println("Saving ${author.name}")
+                authorsRepository.save(AuthorEntity(-1, author.name, author.role)).id
+            }
+        }.toList()
+    }
 
 }
 

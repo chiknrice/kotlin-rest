@@ -23,7 +23,10 @@ interface AuthorsAPI {
     @GetMapping(path = ["/{id}"])
     fun getAuthor(@PathVariable id: Int): ResponseEntity<Author>
 
-    @PostMapping
+    @PostMapping(consumes = [MediaType.APPLICATION_JSON_VALUE])
     fun createAuthor(@RequestBody author: Author): ResponseEntity<Void>
+
+    @PostMapping(path = ["/batch"], consumes = [MediaType.APPLICATION_JSON_VALUE])
+    fun createAuthors(@RequestBody authors: List<Author>): ResponseEntity<Void>
 
 }
