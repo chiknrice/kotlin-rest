@@ -1,5 +1,6 @@
 package org.chiknrice.rest
 
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
 import org.springframework.web.bind.annotation.ResponseStatus
@@ -17,17 +18,20 @@ interface AuthorsService {
 @Service
 class AuthorsServiceProd : AuthorsService {
 
-    private val authors = arrayOf(Author("Ian Bondoc", Role.ADMIN),
-            Author("Jen Legaspi", Role.USER))
+    @Autowired
+    lateinit var authorsRepository: AuthorsRepository
 
-    override fun getAuthors() = authors.mapIndexed { index, author -> index to author }.toMap()
+    override fun getAuthors() = authorsRepository
+            .findByRole(Role.ADMIN)
+            .map { authorEntity -> authorEntity.id to Author(authorEntity.name, authorEntity.role) }
+            .toMap()
 
-    override fun getAuthor(id: Int) = authors.getOrElse(id) { throw NotFoundException("Author with id: $id not found") }
+    override fun getAuthor(id: Int) = authorsRepository
+            .findById(id)
+            .map { authorEntity -> Author(authorEntity.name, authorEntity.role) }
+            .orElseThrow { NotFoundException("Author with id: $id not found") }
 
-    override fun create(author: Author): Int {
-        authors.set(authors.size, author)
-        return authors.size - 1
-    }
+    override fun create(author: Author) = authorsRepository.save(AuthorEntity(-1, author.name, author.role)).id
 
 }
 
